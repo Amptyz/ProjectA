@@ -1,0 +1,47 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.fragment.HomeFragment">
+
+
+    <TextView
+        android:id="@+id/textView0"
+        android:layout_width="279dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="250dp"
+        android:text="                     开始录音"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="279dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="550dp"
+        android:text="                     我要接单"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/btnRecord"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="150dp"
+        android:background="#0000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_mic_24"
+        />
+
+    <ImageButton
+        android:id="@+id/btnReceive"
+        android:layout_width="100dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="450dp"
+        android:background="#0000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/receive" />
+
+
+</FrameLayout>
