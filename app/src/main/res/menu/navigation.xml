@@ -12,7 +12,7 @@
         android:orderInCategory="1"
         android:id="@+id/navigation_order"
         android:icon="@drawable/order"
-        android:title="订单"
+        android:title="历史"
         />
 
     <item
