@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
+import com.example.SummaryActivity;
 import com.example.Util.Record.Recorder;
 import com.example.receiver.RecordReceiver;
 import com.example.network.APIService;
@@ -50,48 +51,19 @@ import okhttp3.Response;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
-    Callback getRecordsCallback = new Callback() {
-        @Override
-        public void onFailure(Call call, IOException e) {
-            Log.i("FailCall", "Failure!");
-        }
-
-        @Override
-        public void onResponse(Call call, Response response) throws IOException {
-
-            String responseData = response.body().string();
-
-            try {
-                JSONObject obj = new JSONObject(responseData);
-                String summary = obj.getString("result");
-                Log.i("Summary", summary);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-
-
-
-        }
-    };
     //VM
     MainViewModel mainViewModel;
     private RecordReceiver recordReceiver = new RecordReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String recordPath = intent.getStringExtra("recordPath");
-            Toast.makeText(getContext(), "成功获得广播！" + recordPath, Toast.LENGTH_SHORT).show();
-            Log.i("broadcast", recordPath);
-
             Callback uploadCallback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.i("FailCall", "Failure!");
+                    Log.i("Fail", "FailUpLoad!");
                 }
-
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-
                     String responseData = response.body().string();
                     try {
                         JSONObject obj = new JSONObject(responseData);
@@ -100,38 +72,12 @@ public class HomeFragment extends Fragment {
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-
                 }
             };
-            Callback endCallback = new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.i("FailCall", "Failure!");
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-
-                    String responseData = response.body().string();
-                    try {
-                        JSONObject obj = new JSONObject(responseData);
-                        String code = obj.getString("code");
-                        Log.i("END", code);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }
-            };
-
-
             String token = mainViewModel.getToken();
             File file = new File(recordPath);
             try {
-
                 APIService.addRecord(token, file, uploadCallback);
-                APIService.endClass(token,endCallback);
-                APIService.getAllRecords(token,getRecordsCallback);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -267,25 +213,6 @@ public class HomeFragment extends Fragment {
 
     private void startRecord() throws JSONException {
         //发送startclass
-        Callback startCallback = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.i("FailCall", "Failure!");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String responseData = response.body().string();
-
-                Log.i("Start", "start");
-
-            }
-        };
-        String token = mainViewModel.getToken();
-
-        APIService.startClass(token, startCallback);
-
 
         Intent intent = new Intent(requireActivity(), RecordingService.class);
         intent.putExtra("baseFilePath", Objects.requireNonNull(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC)).getAbsolutePath());
@@ -344,14 +271,72 @@ public class HomeFragment extends Fragment {
                 if (!mainViewModel.isClassStarted) {
                     mainViewModel.isClassStarted = true;
                     enableRecord();
+                    Callback startCallback = new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.i("FailCall", "Failure!");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+
+                            String responseData = response.body().string();
+
+                            Log.i("Start", "start");
+
+                        }
+                    };
+                    String token = mainViewModel.getToken();
+
+                    try {
+                        APIService.startClass(token, startCallback);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                     textClass.setText("结束课程");
                 } else {
                     mainViewModel.isClassStarted = false;
                     if (mainViewModel.isRecordBtnActive) {
                         btnRecord.callOnClick();
                     }
+
                     disableRecord();
+
+                    Callback endCallback = new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.i("FailEnd", "FailEnd!");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+
+                            String responseData = response.body().string();
+                            try {
+                                JSONObject obj = new JSONObject(responseData);
+                                String code = obj.getString("code");
+                                Log.i("END", code);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            //结束课堂返回以后请求summary
+                            postSummary();
+
+
+
+                        }
+                    };
+                    String token = mainViewModel.getToken();
+                    try {
+                        APIService.endClass(token,endCallback);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                     textClass.setText("创建新课程");
+
+
+
                 }
             }
         });
@@ -360,5 +345,41 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         getActivity().getApplicationContext().unregisterReceiver(recordReceiver);
+    }
+
+    public void postSummary(){
+        Callback summaryCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("FailSummary", "FailSummary!");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String responseData = response.body().string();
+
+                try {
+                    JSONObject obj = new JSONObject(responseData);
+                    String summary = obj.getString("result");
+                    Log.i("summary", summary);
+                    Intent intent = new Intent(getActivity(), SummaryActivity.class);
+                    intent.putExtra("summary",summary);
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        };
+
+        String token = mainViewModel.getToken();
+        try {
+            APIService.getAllRecords(token,summaryCallback);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

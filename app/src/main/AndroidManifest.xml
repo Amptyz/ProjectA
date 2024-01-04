@@ -19,7 +19,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
-        android:label="花狮送"
+        android:label="卷宝"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UIDesign"
@@ -40,6 +40,11 @@
 
         <activity
             android:name="com.example.MainActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name="com.example.SummaryActivity"
             android:exported="true">
 
         </activity>
