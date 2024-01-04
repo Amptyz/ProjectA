@@ -22,6 +22,7 @@
             android:src="@drawable/me" />
 
         <TextView
+            android:id="@+id/displayName"
             android:layout_width="173dp"
             android:layout_height="wrap_content"
             android:gravity="center"

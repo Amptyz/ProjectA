@@ -16,6 +16,8 @@ public class LoginRepository {
     // @see https://developer.android.com/training/articles/keystore
     private LoggedInUser user = null;
 
+    private String token;
+    private String userName;
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
         this.dataSource = dataSource;
@@ -50,5 +52,17 @@ public class LoginRepository {
             setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
         }
         return result;
+    }
+    public String getToken(){
+        return token;
+    }
+    public void setToken(String t){
+        token=t;
+    }
+    public String getUserName(){
+        return userName;
+    }
+    public void setUserName(String t){
+        userName=t;
     }
 }

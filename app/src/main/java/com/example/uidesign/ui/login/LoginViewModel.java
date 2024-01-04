@@ -34,7 +34,7 @@ public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private LoginRepository loginRepository;//存储用户信息
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
@@ -90,7 +90,12 @@ public class LoginViewModel extends ViewModel {
 
                     JSONObject dataobj = new JSONObject(dataStr);
 
-
+                    if(CodeStr.equals("200")) {
+                        String tokenn = dataobj.getString("token");
+                        String uName = dataobj.getString("userName");
+                        loginRepository.setToken(tokenn);
+                        loginRepository.setUserName(uName);
+                    }
                     Log.i("code", CodeStr);
                     code[0] =CodeStr;
                 } catch (IOException e) {
@@ -109,6 +114,7 @@ public class LoginViewModel extends ViewModel {
             Log.i("sdsd", "sdfsdfdg!!!");
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
             loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+
         } else {
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }
@@ -141,5 +147,9 @@ public class LoginViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
+    }
+
+    public LoginRepository getLoginRepository(){
+        return loginRepository;
     }
 }

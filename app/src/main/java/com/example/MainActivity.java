@@ -5,11 +5,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.Data.MainViewModel;
 import com.example.fragment.HomeFragment;
 import com.example.fragment.MeFragment;
 import com.example.fragment.OrderFragment;
@@ -17,6 +20,8 @@ import com.example.uidesign.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity   implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+
+    MainViewModel mainViewModel;
     ViewPager viewPager;
     BottomNavigationView mNavigationView;
     HomeFragment HomeFragments = new HomeFragment();
@@ -26,6 +31,14 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        Intent intent = getIntent();
+        String tokenn = intent.getStringExtra("token");
+        String uName = intent.getStringExtra("userName");
+
+        mainViewModel.setToken(tokenn);
+        mainViewModel.setUserName(uName);
         //页面初始化导航栏
         init();
 
