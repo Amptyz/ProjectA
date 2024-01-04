@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
@@ -38,7 +37,15 @@ public class HomeFragment extends Fragment {
 
     //VM
     MainViewModel mainViewModel;
-    LoginViewModel loginViewModel;
+    private RecordReceiver recordReceiver = new RecordReceiver(){
+        @Override
+        public void onReceive(Context context,Intent intent){
+            String recordPath = intent.getStringExtra("recordPath");
+            Toast.makeText(getContext(),"成功获得广播！"+recordPath,Toast.LENGTH_SHORT).show();
+            Log.i("broadcast",recordPath);
+
+        }
+    };
     //权限相关
     String[] mPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
 
@@ -98,7 +105,14 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        //注册动态广播
 
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("com.example.receiver.RecordReceiver");
+        getActivity().getApplicationContext().registerReceiver(recordReceiver, intentFilter);
+
+
+        //获取mainViewModel
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         Recorder rec = new Recorder(getContext());
         mainViewModel.setRecorder(rec);
@@ -217,5 +231,10 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().getApplicationContext().unregisterReceiver(recordReceiver);
     }
 }
