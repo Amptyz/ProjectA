@@ -66,9 +66,7 @@ public class AudioFragment extends Fragment {
                 Toast.makeText(getActivity(), "长按了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
             }
         });
-
         audioRecycleView.setAdapter(adapter);
-        audioRecycleView.addItemDecoration(new VerticalDividerItemDecoration(getContext()));
         initMyFile(getContext().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
 
 //        // 初始化适配器

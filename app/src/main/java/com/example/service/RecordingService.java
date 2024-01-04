@@ -113,6 +113,7 @@ public class RecordingService extends Service {
     private void stopRecording() {
         if (mIsRecording) {
             mIsRecording = false;
+            mRecorder.stop();
             stopForeground(STOP_FOREGROUND_REMOVE);
             mRecorder = null;
         }
@@ -164,7 +165,7 @@ public class RecordingService extends Service {
         String channelID = "juanbao.record";
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("卷宝使用麦克风是使用的通知类别");
+        channel.setDescription("卷宝使用麦克风时使用的通知类别");
         notificationManager.createNotificationChannel(channel);
         Notification notification = new NotificationCompat.Builder(this, channelID)
                 .setSmallIcon(R.drawable.logo)

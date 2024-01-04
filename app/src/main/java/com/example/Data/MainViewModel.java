@@ -13,6 +13,7 @@ import com.example.Util.Record.Recorder;
 public class MainViewModel extends ViewModel {
 
     public boolean isRecordBtnActive;
+    public boolean isClassStarted;
     private String token;
     private String userName;
     private Recorder recorder;

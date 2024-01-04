@@ -10,17 +10,20 @@
         android:id="@+id/textView0"
         android:layout_width="279dp"
         android:layout_height="67dp"
-        android:layout_marginStart="55dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="250dp"
-        android:text="                     开始挂机"
+        android:gravity="center"
+        android:text="开始挂机"
         android:textSize="20sp" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="279dp"
         android:layout_height="67dp"
-        android:layout_marginStart="55dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="550dp"
-        android:text="                     我要接单"
+        android:gravity="center"
+        android:text="创建新课程"
         android:textSize="20sp" />
 
     <ImageButton

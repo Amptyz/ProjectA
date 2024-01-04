@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
@@ -50,6 +51,11 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ImageButton btnRecord;
+    private ImageButton btnClass;
+    private TextView textRecord;
+    private TextView textClass;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -96,57 +102,18 @@ public class HomeFragment extends Fragment {
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         Recorder rec = new Recorder(getContext());
         mainViewModel.setRecorder(rec);
-        mainViewModel.isRecordBtnActive=false;
-        // 录音键
-        ImageButton btnPlace = view.findViewById(R.id.btnRecord);
+        mainViewModel.isRecordBtnActive = false;
+        mainViewModel.isClassStarted = false;
 
-        btnPlace.setOnClickListener(new View.OnClickListener() {
+        btnRecord = view.findViewById(R.id.btnRecord);
+        btnClass = view.findViewById(R.id.btnReceive);
+        textRecord = view.findViewById(R.id.textView0);
+        textClass = view.findViewById(R.id.textView1);
 
-            @Override
-            public void onClick(View v) {
+        setRecordButtonCallback();
+        setClassButtonCallback();
 
-                //initPermission();
-                if(!mainViewModel.isRecordBtnActive) {
-                    int flag = checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO);
-
-                    if (flag != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(mPermissions, 1);
-                    } else {
-
-                        showPermissionOnToast();
-//                        mainViewModel.start();
-                        startRecord();
-                    }
-                }else{
-                    //关闭录音
-//                    mainViewModel.stop();
-                    stopRecord();
-                }
-                mainViewModel.isRecordBtnActive = !mainViewModel.isRecordBtnActive;
-                btnPlace.setActivated(mainViewModel.isRecordBtnActive);
-
-                //注释原来的跳转
-                //Intent intent = new Intent(getActivity(), OrderPlace.class);
-                //startActivity(intent);
-            }
-        });
-
-
-
-
-
-        ImageButton btnReceive = view.findViewById(R.id.btnReceive);
-        btnReceive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mainViewModel.play("SecondTest.wav");
-
-//                Intent intent = new Intent(getActivity(), OrderReceive.class);
-//                startActivity(intent);
-            }
-        });
-
+        disableRecord();
 
         return view;
     }
@@ -197,4 +164,58 @@ public class HomeFragment extends Fragment {
         requireActivity().stopService(intent);
     }
 
+    private void enableRecord() {
+        btnRecord.setEnabled(true);
+        btnRecord.setAlpha(1f);
+        textRecord.setAlpha(1f);
+    }
+
+    private void disableRecord() {
+        btnRecord.setEnabled(false);
+        btnRecord.setAlpha(0.2f);
+        textRecord.setAlpha(0.2f);
+    }
+
+    private void setRecordButtonCallback() {
+        btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!mainViewModel.isRecordBtnActive) {
+                    int flag = checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO);
+                    if (flag != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(mPermissions, 1);
+                    } else {
+                        showPermissionOnToast();
+                        startRecord();
+                    }
+                    textRecord.setText("停止挂机");
+                }else{
+                    stopRecord();
+                    textRecord.setText("开始挂机");
+                }
+                mainViewModel.isRecordBtnActive = !mainViewModel.isRecordBtnActive;
+                btnRecord.setActivated(mainViewModel.isRecordBtnActive);
+            }
+        });
+    }
+
+    private void setClassButtonCallback() {
+        btnClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mainViewModel.isClassStarted) {
+                    mainViewModel.isClassStarted = true;
+                    enableRecord();
+                    textClass.setText("结束课程");
+                } else {
+                    mainViewModel.isClassStarted = false;
+                    if (mainViewModel.isRecordBtnActive) {
+                        btnRecord.callOnClick();
+                    }
+                    disableRecord();
+                    textClass.setText("创建新课程");
+                }
+            }
+        });
+    }
 }
