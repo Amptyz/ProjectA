@@ -21,11 +21,22 @@ import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
 import com.example.Util.Record.Recorder;
+import com.example.network.APIService;
+import com.example.receiver.RecordReceiver;
 import com.example.service.RecordingService;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 /**
@@ -35,14 +46,93 @@ import java.util.Objects;
  */
 public class HomeFragment extends Fragment {
 
+    Callback getRecordsCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.i("FailCall", "Failure!");
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+
+            String responseData = response.body().string();
+
+            try {
+                JSONObject obj = new JSONObject(responseData);
+                String summary = obj.getString("result");
+                Log.i("Summary", summary);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+        }
+    };
     //VM
     MainViewModel mainViewModel;
-    private RecordReceiver recordReceiver = new RecordReceiver(){
+    private RecordReceiver recordReceiver = new RecordReceiver() {
         @Override
-        public void onReceive(Context context,Intent intent){
+        public void onReceive(Context context, Intent intent) {
             String recordPath = intent.getStringExtra("recordPath");
-            Toast.makeText(getContext(),"成功获得广播！"+recordPath,Toast.LENGTH_SHORT).show();
-            Log.i("broadcast",recordPath);
+            Toast.makeText(getContext(), "成功获得广播！" + recordPath, Toast.LENGTH_SHORT).show();
+            Log.i("broadcast", recordPath);
+
+            Callback uploadCallback = new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i("FailCall", "Failure!");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    String responseData = response.body().string();
+                    try {
+                        JSONObject obj = new JSONObject(responseData);
+                        String code = obj.getString("code");
+                        Log.i("upLoad", code);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            };
+            Callback endCallback = new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i("FailCall", "Failure!");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    String responseData = response.body().string();
+                    try {
+                        JSONObject obj = new JSONObject(responseData);
+                        String code = obj.getString("code");
+                        Log.i("END", code);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            };
+
+
+            String token = mainViewModel.getToken();
+            File file = new File(recordPath);
+            try {
+
+                APIService.addRecord(token, file, uploadCallback);
+                APIService.endClass(token,endCallback);
+                APIService.getAllRecords(token,getRecordsCallback);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
 
         }
     };
@@ -123,6 +213,21 @@ public class HomeFragment extends Fragment {
         btnClass = view.findViewById(R.id.btnReceive);
         textRecord = view.findViewById(R.id.textView0);
         textClass = view.findViewById(R.id.textView1);
+                        showPermissionOnToast();
+//                        mainViewModel.start();
+                        try {
+                            startRecord();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }else{
+                    //关闭录音
+//                    mainViewModel.stop();
+                    stopRecord();
+                }
+                mainViewModel.isRecordBtnActive = !mainViewModel.isRecordBtnActive;
+                btnPlace.setActivated(mainViewModel.isRecordBtnActive);
 
         setRecordButtonCallback();
         setClassButtonCallback();
@@ -140,7 +245,11 @@ public class HomeFragment extends Fragment {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                mainViewModel.start();
                 showPermissionOnToast();
-                startRecord();
+                try {
+                    startRecord();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 // Permission Denied
                 Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -166,7 +275,28 @@ public class HomeFragment extends Fragment {
         Toast.makeText(getContext(), "麦克风权限开启失败", Toast.LENGTH_SHORT).show();
     }
 
-    private void startRecord() {
+    private void startRecord() throws JSONException {
+        //发送startclass
+        Callback startCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("FailCall", "Failure!");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String responseData = response.body().string();
+
+                Log.i("Start", "start");
+
+            }
+        };
+        String token = mainViewModel.getToken();
+
+        APIService.startClass(token, startCallback);
+
+
         Intent intent = new Intent(requireActivity(), RecordingService.class);
         intent.putExtra("baseFilePath", Objects.requireNonNull(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC)).getAbsolutePath());
         requireActivity().startService(intent);
