@@ -68,11 +68,7 @@ public class RecordingService extends Service {
 
     @Override
     public void onDestroy() {
-        if (mIsRecording) {
-            mIsRecording = false;
-            stopRecording();
-            mRecorder = null;
-        }
+        stopRecording();
     }
 
     private void startRecording() {
@@ -100,6 +96,8 @@ public class RecordingService extends Service {
                                 createCacheFile();
                             }
                         }
+                        String recordFilePath = mBaseFilePath + "/record_" +  System.currentTimeMillis() + ".pcm";
+                        storeCacheFile(recordFilePath);
                     } catch (FileNotFoundException e) {
                         Log.w(TAG, "未找到缓冲文件！");
                     } catch (IOException e) {
@@ -113,9 +111,11 @@ public class RecordingService extends Service {
         }
     }
     private void stopRecording() {
-        String recordFilePath = mBaseFilePath + "/record_" +  System.currentTimeMillis() + ".pcm";
-        storeCacheFile(recordFilePath);
-        stopForeground(STOP_FOREGROUND_REMOVE);
+        if (mIsRecording) {
+            mIsRecording = false;
+            stopForeground(STOP_FOREGROUND_REMOVE);
+            mRecorder = null;
+        }
     }
     private boolean createCacheFile() {
         mCacheFile = new File(mCacheFilePath);

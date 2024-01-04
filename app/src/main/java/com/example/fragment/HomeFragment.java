@@ -4,12 +4,14 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Environment;
 import android.widget.ImageButton;
 
 import android.view.LayoutInflater;
@@ -22,6 +24,8 @@ import com.example.Util.Record.Recorder;
 import com.example.service.RecordingService;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
+
+import java.util.Objects;
 
 
 /**
@@ -183,11 +187,13 @@ public class HomeFragment extends Fragment {
 
     private void startRecord() {
         Intent intent = new Intent(requireActivity(), RecordingService.class);
+        intent.putExtra("baseFilePath", Objects.requireNonNull(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC)).getAbsolutePath());
         requireActivity().startService(intent);
     }
 
     private void stopRecord() {
         Intent intent = new Intent(requireActivity(), RecordingService.class);
+        intent.putExtra("baseFilePath", Objects.requireNonNull(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC)).getAbsolutePath());
         requireActivity().stopService(intent);
     }
 
