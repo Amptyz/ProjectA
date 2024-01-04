@@ -18,6 +18,8 @@ public class MainViewModel extends ViewModel {
 
     private Recorder recorder;
 
+    public String currentFile;
+
     private String cachePath;
 
 

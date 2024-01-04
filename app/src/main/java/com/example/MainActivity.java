@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
                         return audioFragments;
                     case 2:
                         return  MeFragments;
+                    case 3:
+                        return uploadFragment;
 
                 }
 
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
 
             @Override
             public int getCount() {
-                return 3;
+                return 4;
             }
         });
     }
@@ -103,6 +105,9 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
         return true;
     }
 
+    public void setFragmentUpload(){
+        viewPager.setCurrentItem(3);
+    }
 
 }
 
