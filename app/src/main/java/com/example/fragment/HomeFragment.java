@@ -1,18 +1,44 @@
 package com.example.fragment;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.ImageButton;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.Data.MainViewModel;
+import com.example.MainActivity;
 import com.example.OrderPlace;
 import com.example.OrderReceive;
+import com.example.Util.Record.Recorder;
 import com.example.uidesign.R;
+import com.example.uidesign.ui.login.LoginViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +47,13 @@ import com.example.uidesign.R;
  */
 public class HomeFragment extends Fragment {
 
+    //VM
+    MainViewModel mainViewModel;
+    LoginViewModel loginViewModel;
+    //权限相关
+    String[] mPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
+
+    private Dialog micDialog;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     static final String ARG_PARAM1 = "param1";
@@ -72,27 +105,93 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // 跳转到下单界面
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        Recorder rec = new Recorder(getContext());
+        mainViewModel.setRecorder(rec);
+        // 录音键
         ImageButton btnPlace = view.findViewById(R.id.btnRecord);
+
         btnPlace.setOnClickListener(new View.OnClickListener() {
+            boolean isActivated=false;
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), OrderPlace.class);
-                startActivity(intent);
+
+                //initPermission();
+                if(isActivated==false) {
+                    int flag = checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO);
+
+                    if (flag != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(mPermissions, 1);
+                    } else {
+
+                        showPermissionOnToast();
+                        mainViewModel.start();
+                    }
+                }else{
+                    //关闭录音
+                    mainViewModel.stop();
+                }
+                isActivated = !isActivated;
+                btnPlace.setActivated(isActivated);
+
+                //注释原来的跳转
+                //Intent intent = new Intent(getActivity(), OrderPlace.class);
+                //startActivity(intent);
             }
         });
+
+
+
+
 
         ImageButton btnReceive = view.findViewById(R.id.btnReceive);
         btnReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), OrderReceive.class);
-                startActivity(intent);
+
+                mainViewModel.play("TestWav.wav");
+
+//                Intent intent = new Intent(getActivity(), OrderReceive.class);
+//                startActivity(intent);
             }
         });
 
 
         return view;
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        boolean hasPermissionDismiss = false;//有权限没有通过
+        if(requestCode == 1){
+
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mainViewModel.start();
+                showPermissionOnToast();
+            } else {
+                // Permission Denied
+                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+
+
+    private void dismissMicDialog() {
+        if (micDialog != null) {
+            micDialog.dismiss();
+            micDialog = null;
+        }
+    }
+
+    private void showPermissionOnToast() {
+        Toast.makeText(getContext(), "麦克风权限开启成功", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showPermissionOffToast() {
+        Toast.makeText(getContext(), "麦克风权限开启失败", Toast.LENGTH_SHORT).show();
+    }
+
 
 }

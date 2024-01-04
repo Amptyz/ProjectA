@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
@@ -25,7 +26,7 @@ public class Recorder {
     private boolean isRecording = false;//mark if is recording
 
     // 采样率，现在能够保证在所有设备上使用的采样率是44100Hz, 但是其他的采样率（22050, 16000, 11025）在一些设备上也可以使用。
-    public static final int SAMPLE_RATE_INHZ = 44100;
+    public static final int SAMPLE_RATE_INHZ = 8000;
 
     // 声道数。CHANNEL_IN_MONO and CHANNEL_IN_STEREO. 其中CHANNEL_IN_MONO是可以保证在所有设备能够使用的。
     public static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_STEREO;
@@ -37,9 +38,13 @@ public class Recorder {
     private Context context;
     private String audioCacheFilePath;
 
+    private String audioStorePath;
+
     public Recorder(Context cont) {
         context=cont;
+        player = new MediaPlayer();
         audioCacheFilePath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + "jerboa_audio_cache.pcm";
+        audioStorePath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath();
     }
 
     public String Start(){
@@ -141,7 +146,30 @@ public class Recorder {
 
     public void Store(String wavFilePath){
         PcmToWavUtil ptwUtil = new PcmToWavUtil();
+        wavFilePath = audioStorePath + "/" + wavFilePath;
+        Log.i("wavFilePath",wavFilePath);
         ptwUtil.pcmToWav(audioCacheFilePath,wavFilePath,true);
     }
+
+    private MediaPlayer player;
+
+
+    public void play(String FilePath,MediaPlayer.OnCompletionListener onCompletionListener){
+        FilePath = audioStorePath + "/" + FilePath;
+        Log.i("playFilePath","FilePath");
+        try {
+            player.setDataSource(FilePath);
+            player.setOnCompletionListener(onCompletionListener);
+            player.prepare();
+            player.start();
+
+        }catch (Exception e){
+
+        }
+    }
+    public void pause(){
+        player.pause();
+    }
+
 
 }

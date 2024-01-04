@@ -83,6 +83,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getSuccess() != null) {
                     //登录跳转
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    //传递用户数据。token
+                    intent.putExtra("token",loginViewModel.getLoginRepository().getToken());
+                    intent.putExtra("userName",loginViewModel.getLoginRepository().getUserName());
+                    Log.i("Token",loginViewModel.getLoginRepository().getToken());
+                    Log.i("userName",loginViewModel.getLoginRepository().getUserName());
                     LoginActivity.this.startActivity(intent);
                     updateUiWithUser(loginResult.getSuccess());
                 }
