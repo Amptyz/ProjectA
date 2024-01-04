@@ -39,7 +39,7 @@ public class MainViewModel extends ViewModel {
 
         recorder.Stop();
         Log.i("playStop","录音结束！");
-        recorder.Store("TestWav.wav");
+        recorder.Store("SecondTest.wav");
 
     }
 

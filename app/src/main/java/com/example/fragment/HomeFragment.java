@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mainViewModel.play("TestWav.wav");
+                mainViewModel.play("SecondTest.wav");
 
 //                Intent intent = new Intent(getActivity(), OrderReceive.class);
 //                startActivity(intent);

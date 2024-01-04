@@ -5,13 +5,16 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AudioAdapter;
+import com.example.MainActivity;
 import com.example.Util.File.MyFile;
+import com.example.Util.VerticalDividerItemDecoration;
 import com.example.uidesign.R;
 
 import java.io.File;
@@ -23,7 +26,7 @@ public class AudioFragment extends Fragment {
 
     //recyclerView
     private RecyclerView audioRecycleView;
-    private RecyclerView.Adapter adapter;
+    private AudioAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<MyFile> myFileList = new ArrayList<>();
 
@@ -50,9 +53,22 @@ public class AudioFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         audioRecycleView.setLayoutManager(layoutManager);
 
-        adapter = new AudioAdapter(myFileList);
-        audioRecycleView.setAdapter(adapter);
+        adapter = new AudioAdapter(getActivity(),myFileList);
 
+        adapter.SetOnItemClickListener(new AudioAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View veiw, int position) {
+                Toast.makeText(getActivity(), "点击了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(getActivity(), "长按了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        audioRecycleView.setAdapter(adapter);
+        audioRecycleView.addItemDecoration(new VerticalDividerItemDecoration(getContext()));
         initMyFile(getContext().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
 
 //        // 初始化适配器
@@ -80,5 +96,11 @@ public class AudioFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
-    // 删除 addOrderItem 和 prepareData 方法
+
+    public void toUploadFragment(){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.viewPager,new UploadFragment(),null)
+                .addToBackStack(null)
+                .commit();
+    }
 }
