@@ -4,7 +4,9 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -12,15 +14,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Environment;
+import android.util.Log;
 import android.widget.ImageButton;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
 import com.example.Util.Record.Recorder;
+import com.example.receiver.RecordReceiver;
 import com.example.network.APIService;
 import com.example.receiver.RecordReceiver;
 import com.example.service.RecordingService;
@@ -213,21 +218,6 @@ public class HomeFragment extends Fragment {
         btnClass = view.findViewById(R.id.btnReceive);
         textRecord = view.findViewById(R.id.textView0);
         textClass = view.findViewById(R.id.textView1);
-                        showPermissionOnToast();
-//                        mainViewModel.start();
-                        try {
-                            startRecord();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }else{
-                    //关闭录音
-//                    mainViewModel.stop();
-                    stopRecord();
-                }
-                mainViewModel.isRecordBtnActive = !mainViewModel.isRecordBtnActive;
-                btnPlace.setActivated(mainViewModel.isRecordBtnActive);
 
         setRecordButtonCallback();
         setClassButtonCallback();
@@ -330,7 +320,11 @@ public class HomeFragment extends Fragment {
                         requestPermissions(mPermissions, 1);
                     } else {
                         showPermissionOnToast();
-                        startRecord();
+                        try {
+                            startRecord();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     textRecord.setText("停止挂机");
                 }else{
