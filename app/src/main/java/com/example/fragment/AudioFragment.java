@@ -1,5 +1,6 @@
 package com.example.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.example.MainActivity;
 import com.example.Util.File.MyFile;
 import com.example.Util.VerticalDividerItemDecoration;
 import com.example.uidesign.R;
+import com.example.uidesign.data.model.ClassRecord;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class AudioFragment extends Fragment {
     private RecyclerView audioRecycleView;
     private AudioAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<MyFile> myFileList = new ArrayList<>();
+    private List<ClassRecord> myRecordList = new ArrayList<>();
 
    // private OrderAdapter orderAdapter;
 
@@ -57,7 +59,7 @@ public class AudioFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         audioRecycleView.setLayoutManager(layoutManager);
 
-        adapter = new AudioAdapter(getActivity(),myFileList);
+        adapter = new AudioAdapter(getActivity(),myRecordList);
 
         adapter.SetOnItemClickListener(new AudioAdapter.OnItemClickListener(){
             @Override
@@ -65,7 +67,6 @@ public class AudioFragment extends Fragment {
 
                 Toast.makeText(getActivity(), "点击了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
 
-                mainViewModel.currentFile = myFileList.get(position).getFileName();
                 toUploadFragment();
             }
 
@@ -75,7 +76,7 @@ public class AudioFragment extends Fragment {
             }
         });
         audioRecycleView.setAdapter(adapter);
-        initMyFile(getContext().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
+        initRecord();
 
 
 
@@ -83,21 +84,15 @@ public class AudioFragment extends Fragment {
     }
 
     //获取文件列表，并提醒adpater
-    private void initMyFile(File externalStorageDirectory) {
-        myFileList.clear();
-        List<File> files = new ArrayList<>();
-        Collections.addAll(files, externalStorageDirectory.listFiles());
-        for (File file : files) {
-            String fileName = file.getName();
-            MyFile myFile = new MyFile(fileName);
-            myFileList.add(myFile);
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    private void initRecord() {
+        myRecordList.clear();
+        myRecordList.add(new ClassRecord(1, "开学第一课", "上个锤子课，不如睡觉", "上不了一点", "2024-01-05"));
         adapter.notifyDataSetChanged();
     }
 
     public void toUploadFragment(){
         MainActivity mainActivity=(MainActivity)getActivity();
-
         mainActivity.setFragmentUpload();
     }
 }

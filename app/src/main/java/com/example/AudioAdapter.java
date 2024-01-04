@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,30 +12,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.Util.File.MyFile;
 import com.example.uidesign.R;
+import com.example.uidesign.data.model.ClassRecord;
 
 import java.util.List;
 
 public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHolder> {
 
     private MainActivity mainActivity;
-    private List<MyFile> mFileList;
+    private List<ClassRecord> mRecordList;
     private Context context;
-    public void printt(){
 
-    }
     public static class AudioViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textView;
+        public TextView textClassName;
+        public TextView textSummary;
+        public TextView textDate;
+        public ImageButton btnDelete;
+
         public AudioViewHolder(@NonNull View itemView) {
 
             super(itemView);
-            textView=itemView.findViewById(R.id.tv_item);
+            textClassName = itemView.findViewById(R.id.className);
+            textSummary = itemView.findViewById(R.id.summary);
+            textDate = itemView.findViewById(R.id.date);
+            btnDelete = itemView.findViewById(R.id.delete);
         }
     }
 
-    public AudioAdapter(Context cont,List<MyFile>list){
+    public AudioAdapter(Context cont,List<ClassRecord>list){
         context=cont;
-        mFileList=list;
+        mRecordList=list;
     }
     @NonNull
     @Override
@@ -45,22 +52,30 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
 
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
-        MyFile myFile = mFileList.get(position);
-        holder.textView.setText(myFile.getFileName());
+        ClassRecord myRecord = mRecordList.get(position);
+        holder.textClassName.setText(myRecord.getClassName());
+        holder.textSummary.setText(myRecord.getSummary());
+        holder.textDate.setText(myRecord.getDate());
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         int posi=position;
         if(onItemClickListener!=null){
             // 点击
-            holder.textView.setOnClickListener(new View.OnClickListener(){
+            holder.textClassName.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClick(holder.textView, posi);
+                    onItemClickListener.onItemClick(holder.textClassName, posi);
                 }
             });
             // 长按
-            holder.textView.setOnLongClickListener(new View.OnLongClickListener(){
+            holder.textClassName.setOnLongClickListener(new View.OnLongClickListener(){
                 @Override
                 public boolean onLongClick(View view) {
-                    onItemClickListener.onItemLongClick(holder.textView, posi);
+                    onItemClickListener.onItemLongClick(holder.textClassName, posi);
                     return false;
                 }
             });
@@ -70,12 +85,12 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
 
     @Override
     public int getItemCount() {
-        return mFileList.size();
+        return mRecordList.size();
     }
 
     private OnItemClickListener onItemClickListener;
     public interface OnItemClickListener{
-        void onItemClick(View veiw, int position);
+        void onItemClick(View view, int position);
         void onItemLongClick(View view, int position);
     }
 
