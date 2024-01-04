@@ -33,6 +33,7 @@ import com.example.service.RecordingService;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -360,8 +361,10 @@ public class HomeFragment extends Fragment {
                 String responseData = response.body().string();
 
                 try {
+
                     JSONObject obj = new JSONObject(responseData);
-                    String summary = obj.getString("result");
+                    JSONArray dataArray = obj.getJSONArray("data");
+                    String summary = dataArray.getJSONObject(0).getString("summary");
                     Log.i("summary", summary);
                     Intent intent = new Intent(getActivity(), SummaryActivity.class);
                     intent.putExtra("summary",summary);
