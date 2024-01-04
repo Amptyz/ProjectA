@@ -1,44 +1,26 @@
 package com.example.fragment;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.ImageButton;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
-import com.example.MainActivity;
-import com.example.OrderPlace;
-import com.example.OrderReceive;
 import com.example.Util.Record.Recorder;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
