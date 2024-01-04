@@ -29,6 +29,8 @@ import com.example.MainActivity;
 import com.example.uidesign.R;
 import com.example.uidesign.databinding.ActivityLoginBinding;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 
@@ -129,6 +131,8 @@ public class LoginActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
                     }
                 }
                 return false;
@@ -145,6 +149,8 @@ public class LoginActivity extends AppCompatActivity {
                     loginViewModel.login(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
 

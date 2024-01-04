@@ -15,7 +15,6 @@ public class MainViewModel extends ViewModel {
     public boolean isRecordBtnActive;
     private String token;
     private String userName;
-
     private Recorder recorder;
 
     public String currentFile;
