@@ -33,8 +33,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/mic"
 
-
-
         />
 
     <ImageButton

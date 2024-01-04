@@ -16,6 +16,7 @@ import com.example.Data.MainViewModel;
 import com.example.fragment.HomeFragment;
 import com.example.fragment.MeFragment;
 import com.example.fragment.AudioFragment;
+import com.example.fragment.UploadFragment;
 import com.example.uidesign.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
     HomeFragment HomeFragments = new HomeFragment();
     AudioFragment audioFragments = new AudioFragment();
     MeFragment MeFragments =new MeFragment();
+
+    UploadFragment uploadFragment= new UploadFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
                         return audioFragments;
                     case 2:
                         return  MeFragments;
+
                 }
 
                 return null;
@@ -98,5 +102,7 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
         viewPager.setCurrentItem(menuItem.getOrder());
         return true;
     }
+
+
 }
 
