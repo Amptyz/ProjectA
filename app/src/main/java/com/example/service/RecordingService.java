@@ -113,6 +113,7 @@ public class RecordingService extends Service {
     private void stopRecording() {
         if (mIsRecording) {
             mIsRecording = false;
+            mRecorder.stop();
             stopForeground(STOP_FOREGROUND_REMOVE);
             mRecorder = null;
         }
@@ -150,7 +151,8 @@ public class RecordingService extends Service {
             }
             Intent intent = new Intent();
             intent.putExtra("recordPath", recordFilePath);
-            intent.setAction("com.example.service.RecordingService");
+            intent.setAction("com.example.receiver.RecordReceiver");
+            //intent.setClass(this,Class.forName("com.example.receiver.RecordReceiver"));
             sendBroadcast(intent);
         } catch (IOException e) {
             Log.w(TAG, "写入记录文件失败！");

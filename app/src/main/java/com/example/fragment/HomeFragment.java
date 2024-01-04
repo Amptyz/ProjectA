@@ -1,10 +1,13 @@
 package com.example.fragment;
 
+
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Environment;
+import android.util.Log;
 import android.widget.ImageButton;
 
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.Data.MainViewModel;
 import com.example.Util.Record.Recorder;
+import com.example.receiver.RecordReceiver;
 import com.example.service.RecordingService;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
@@ -37,7 +42,15 @@ public class HomeFragment extends Fragment {
 
     //VM
     MainViewModel mainViewModel;
-    LoginViewModel loginViewModel;
+    private RecordReceiver recordReceiver = new RecordReceiver(){
+        @Override
+        public void onReceive(Context context,Intent intent){
+            String recordPath = intent.getStringExtra("recordPath");
+            Toast.makeText(getContext(),"成功获得广播！"+recordPath,Toast.LENGTH_SHORT).show();
+            Log.i("broadcast",recordPath);
+
+        }
+    };
     //权限相关
     String[] mPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
 
@@ -92,7 +105,14 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        //注册动态广播
 
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("com.example.receiver.RecordReceiver");
+        getActivity().getApplicationContext().registerReceiver(recordReceiver, intentFilter);
+
+
+        //获取mainViewModel
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         Recorder rec = new Recorder(getContext());
         mainViewModel.setRecorder(rec);
@@ -197,4 +217,9 @@ public class HomeFragment extends Fragment {
         requireActivity().stopService(intent);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().getApplicationContext().unregisterReceiver(recordReceiver);
+    }
 }

@@ -66,7 +66,7 @@ public class AudioFragment extends Fragment {
                 Toast.makeText(getActivity(), "点击了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
 
                 mainViewModel.currentFile = myFileList.get(position).getFileName();
-                //toUploadFragment();
+                toUploadFragment();
             }
 
             @Override
@@ -99,6 +99,7 @@ public class AudioFragment extends Fragment {
 
     public void toUploadFragment(){
         MainActivity mainActivity=(MainActivity)getActivity();
+
         mainActivity.setFragmentUpload();
     }
 }
