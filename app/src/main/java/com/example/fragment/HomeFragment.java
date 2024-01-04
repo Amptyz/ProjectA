@@ -108,16 +108,17 @@ public class HomeFragment extends Fragment {
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         Recorder rec = new Recorder(getContext());
         mainViewModel.setRecorder(rec);
+        mainViewModel.isRecordBtnActive=false;
         // 录音键
         ImageButton btnPlace = view.findViewById(R.id.btnRecord);
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
-            boolean isActivated=false;
+
             @Override
             public void onClick(View v) {
 
                 //initPermission();
-                if(isActivated==false) {
+                if(!mainViewModel.isRecordBtnActive) {
                     int flag = checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO);
 
                     if (flag != PackageManager.PERMISSION_GRANTED) {
@@ -131,8 +132,8 @@ public class HomeFragment extends Fragment {
                     //关闭录音
                     mainViewModel.stop();
                 }
-                isActivated = !isActivated;
-                btnPlace.setActivated(isActivated);
+                mainViewModel.isRecordBtnActive = !mainViewModel.isRecordBtnActive;
+                btnPlace.setActivated(mainViewModel.isRecordBtnActive);
 
                 //注释原来的跳转
                 //Intent intent = new Intent(getActivity(), OrderPlace.class);

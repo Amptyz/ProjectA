@@ -144,11 +144,12 @@ public class Recorder {
         }
     }
 
-    public void Store(String wavFilePath){
+    public String Store(String wavFilePath){
         PcmToWavUtil ptwUtil = new PcmToWavUtil();
         wavFilePath = audioStorePath + "/" + wavFilePath;
         Log.i("wavFilePath",wavFilePath);
         ptwUtil.pcmToWav(audioCacheFilePath,wavFilePath,true);
+        return wavFilePath;
     }
 
     private MediaPlayer player;
@@ -156,7 +157,7 @@ public class Recorder {
 
     public void play(String FilePath,MediaPlayer.OnCompletionListener onCompletionListener){
         FilePath = audioStorePath + "/" + FilePath;
-        Log.i("playFilePath","FilePath");
+        Log.i("playFilePath",FilePath);
         try {
             player.setDataSource(FilePath);
             player.setOnCompletionListener(onCompletionListener);
@@ -170,6 +171,12 @@ public class Recorder {
     public void pause(){
         player.pause();
     }
+    public void stopPlay(){
+        player.stop();
+    }
 
+    public String getAudioStorePath(){
+        return audioStorePath;
+    }
 
 }

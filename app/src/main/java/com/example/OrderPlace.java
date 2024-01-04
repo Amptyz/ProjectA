@@ -7,9 +7,7 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
-import com.example.fragment.OrderFragment;
 import com.example.uidesign.R;
 
 public class  OrderPlace extends AppCompatActivity {
