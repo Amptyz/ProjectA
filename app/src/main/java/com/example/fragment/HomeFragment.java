@@ -34,11 +34,13 @@ import com.example.MainActivity;
 import com.example.OrderPlace;
 import com.example.OrderReceive;
 import com.example.Util.Record.Recorder;
+import com.example.service.RecordingService;
 import com.example.uidesign.R;
 import com.example.uidesign.ui.login.LoginViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,11 +127,13 @@ public class HomeFragment extends Fragment {
                     } else {
 
                         showPermissionOnToast();
-                        mainViewModel.start();
+//                        mainViewModel.start();
+                        startRecord();
                     }
                 }else{
                     //关闭录音
-                    mainViewModel.stop();
+//                    mainViewModel.stop();
+                    stopRecord();
                 }
                 isActivated = !isActivated;
                 btnPlace.setActivated(isActivated);
@@ -166,8 +170,9 @@ public class HomeFragment extends Fragment {
 
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mainViewModel.start();
+//                mainViewModel.start();
                 showPermissionOnToast();
+                startRecord();
             } else {
                 // Permission Denied
                 Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -193,5 +198,14 @@ public class HomeFragment extends Fragment {
         Toast.makeText(getContext(), "麦克风权限开启失败", Toast.LENGTH_SHORT).show();
     }
 
+    private void startRecord() {
+        Intent intent = new Intent(requireActivity(), RecordingService.class);
+        requireActivity().startService(intent);
+    }
+
+    private void stopRecord() {
+        Intent intent = new Intent(requireActivity(), RecordingService.class);
+        requireActivity().stopService(intent);
+    }
 
 }
