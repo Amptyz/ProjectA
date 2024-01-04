@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="录音文件"
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <ImageButton
+        android:id="@+id/btnUpload"
+        android:layout_width="58dp"
+        android:layout_height="56dp"
+        android:background="#0000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_upload"
+
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="253dp"
+        tools:layout_editor_absoluteY="415dp" />
+
+    <ImageButton
+        android:id="@+id/btnPlay"
+        android:layout_width="58dp"
+        android:layout_height="56dp"
+        android:background="#0000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_play"
+
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="415dp" />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="58dp"
+        android:layout_height="56dp"
+        android:background="#0000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_delete"
+
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="176dp"
+        tools:layout_editor_absoluteY="415dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

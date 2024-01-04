@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class PcmToWavUtil {
     private int mBufferSize; //缓存的音频大小
-    private int mSampleRate = 44100;// 此处的值必须与录音时的采样率一致
-    private int mChannel = AudioFormat.CHANNEL_IN_STEREO; //立体声
+    private int mSampleRate = 16000;// 此处的值必须与录音时的采样率一致
+    private int mChannel = AudioFormat.CHANNEL_IN_MONO; //立体声
     private int mEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
     private static class SingleHolder {
@@ -60,7 +60,7 @@ public class PcmToWavUtil {
         long totalAudioLen;
         long totalDataLen;
         long longSampleRate = mSampleRate;
-        int channels = 2;
+        int channels = 1;               //声道数
         long byteRate = 16 * mSampleRate * channels / 8;
         byte[] data = new byte[mBufferSize];
         try {

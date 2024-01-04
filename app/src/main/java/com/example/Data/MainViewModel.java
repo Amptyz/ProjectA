@@ -1,26 +1,32 @@
 package com.example.Data;
 
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.Util.Record.Recorder;
 
 public class MainViewModel extends ViewModel {
 
+    public boolean isRecordBtnActive;
     private String token;
     private String userName;
-
     private Recorder recorder;
 
     private String cachePath;
+
 
     public void setRecorder(Recorder rec){
         recorder=rec;
     }
     public void start(){
+
+
+        Log.i("ExternalPath",Environment.getExternalStorageDirectory().getAbsolutePath());
 
         Log.i("playStart","开始录音！");
         cachePath = recorder.Start();
@@ -29,10 +35,10 @@ public class MainViewModel extends ViewModel {
     public void stop(){
 
 
-        Log.i("playStop","录音结束！");
-        recorder.Stop();
 
-        recorder.Store("TestWav.wav");
+        recorder.Stop();
+        Log.i("playStop","录音结束！");
+        recorder.Store("SecondTest.wav");
 
     }
 
@@ -73,4 +79,7 @@ public class MainViewModel extends ViewModel {
     public String getUserName(){
         return userName;
     }
+
+
+
 }

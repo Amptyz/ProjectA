@@ -12,7 +12,7 @@
         android:layout_height="67dp"
         android:layout_marginStart="55dp"
         android:layout_marginTop="250dp"
-        android:text="                     开始录音"
+        android:text="                     开始挂机"
         android:textSize="20sp" />
     <TextView
         android:id="@+id/textView1"
@@ -32,8 +32,6 @@
         android:background="#0000"
         android:scaleType="centerCrop"
         android:src="@drawable/mic"
-
-
 
         />
 
