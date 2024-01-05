@@ -156,8 +156,6 @@ public class HomeFragment extends Fragment {
 
         //获取mainViewModel
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-        Recorder rec = new Recorder(getContext());
-        mainViewModel.setRecorder(rec);
         mainViewModel.isRecordBtnActive = false;
         mainViewModel.isClassStarted = false;
 
