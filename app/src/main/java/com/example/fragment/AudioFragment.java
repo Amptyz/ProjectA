@@ -81,8 +81,13 @@ public class AudioFragment extends Fragment {
             public void onItemClick(View view, int position) {
 
                 Toast.makeText(getActivity(), "点击了第"+(position+1)+"条", Toast.LENGTH_SHORT).show();
-
-
+                ClassRecord tRecord = myRecordList.get(position);
+                mainViewModel.setCurrentRecord(tRecord);
+                Intent intent=new Intent(getActivity(),SummaryActivity.class);
+                intent.putExtra("className",tRecord.getClassName());
+                intent.putExtra("summary",tRecord.getSummary());
+                intent.putExtra("originText",tRecord.getOriginText());
+                startActivity(intent);
             }
 
             @Override

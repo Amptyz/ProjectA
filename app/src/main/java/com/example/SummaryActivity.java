@@ -36,8 +36,10 @@ public class SummaryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(mainViewModel.getCurrentRecord().getClassName());
-        summary.setText("原文：" + mainViewModel.getCurrentRecord().getOriginText() + "\n总结：" + mainViewModel.getCurrentRecord().getSummary());
+        Intent intent=getIntent();
+        getSupportActionBar().setTitle(intent.getStringExtra("className"));
+        summary.setText("原文：" + intent.getStringExtra("originText") + "\n总结：" + intent.getStringExtra("summary"));
+
     }
 
 
