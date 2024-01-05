@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.Util.Record.Recorder;
+import com.example.uidesign.data.model.ClassRecord;
 
 public class MainViewModel extends ViewModel {
 
@@ -17,57 +18,8 @@ public class MainViewModel extends ViewModel {
     private String token;
     private String userName;
     private Recorder recorder;
-
     public String currentFile;
-
-    private String cachePath;
-
-
-    public void setRecorder(Recorder rec){
-        recorder=rec;
-    }
-    public void start(){
-
-
-        Log.i("ExternalPath",Environment.getExternalStorageDirectory().getAbsolutePath());
-
-        Log.i("playStart","开始录音！");
-        cachePath = recorder.Start();
-
-    }
-    public void stop(){
-
-
-
-        recorder.Stop();
-        Log.i("playStop","录音结束！");
-        recorder.Store("SecondTest.wav");
-
-    }
-
-    public void play(String file){
-        MediaPlayer.OnCompletionListener listener = new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Log.i("playEnd","播放结束！");
-            }
-        };
-        recorder.play(file,listener);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    private ClassRecord currentRecord;
 
 
     public void setToken(String t){
@@ -83,6 +35,12 @@ public class MainViewModel extends ViewModel {
         return userName;
     }
 
+    public void setCurrentRecord(ClassRecord classRecord) {
+        currentRecord = classRecord;
+    }
 
+    public ClassRecord getCurrentRecord() {
+        return currentRecord;
+    }
 
 }
