@@ -4,7 +4,9 @@ package com.example;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
@@ -92,6 +94,9 @@ public class MainActivity extends AppCompatActivity   implements BottomNavigatio
     @Override
     public void onPageSelected(int position) {
         mNavigationView.getMenu().getItem(position).setChecked(true);
+        if(position==1){
+            audioFragments.initRecord();
+        }
     }
 
     @Override

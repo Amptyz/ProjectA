@@ -89,7 +89,7 @@ public class RecordingService extends Service {
                                 mCacheFOS.write(data);
                                 mCacheSize += state;
                             }
-                            if (mCacheSize >= 5242880) { //5MB
+                            if (mCacheSize >= 204800) { //200kb
                                 mCacheSize = 0;
                                 String recordFilePath = mBaseFilePath + "/record_" +  System.currentTimeMillis() + ".pcm";
                                 if (!storeCacheFile(recordFilePath)) return;

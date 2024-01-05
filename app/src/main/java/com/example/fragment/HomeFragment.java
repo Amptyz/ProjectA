@@ -366,9 +366,9 @@ public class HomeFragment extends Fragment {
                     JSONArray dataArray = obj.getJSONArray("data");
                     String summary = dataArray.getJSONObject(0).getString("summary");
                     Log.i("summary", summary);
-                    Intent intent = new Intent(getActivity(), SummaryActivity.class);
-                    intent.putExtra("summary",summary);
-                    startActivity(intent);
+                    //Intent intent = new Intent(getActivity(), SummaryActivity.class);
+                    //intent.putExtra("summary",summary);
+                    //startActivity(intent);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
